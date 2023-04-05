@@ -27,7 +27,7 @@ namespace text_analytics_for_health_support_functions
         private static readonly string TranslatorEndpoint = " https://api.cognitive.microsofttranslator.com";
 
         [FunctionName("MedicalDocumentsToFhirFunction")]
-        public async Task Run([BlobTrigger("medical-texts-input/{name}", Connection = "AzureWebStorageForData")]Stream myBlob, string name, ILogger log)
+        public async Task Run([BlobTrigger("medical-texts-input", Connection = "AzureWebStorageForData")]Stream myBlob, ILogger log)
         {
             //Read Document
             string document = await new StreamReader(myBlob).ReadToEndAsync();
