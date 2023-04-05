@@ -141,8 +141,7 @@
             "name": "[parameters('healthDataServicesWorkspace')]",
             "location": "eastus",
             "properties": {
-                "publicNetworkAccess": "Enabled",
-                "provisioningState": "Succeeded"
+                "publicNetworkAccess": "Enabled"
             }
         },
         {
