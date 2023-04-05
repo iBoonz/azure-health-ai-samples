@@ -88,7 +88,7 @@
         "hostingPlanNameLinux": "[concat('plan-linux-', parameters('functionName'))]",
         "storageAccount": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
         "languageCongntiveServiceId": "[resourceId('Microsoft.CognitiveServices/accounts', parameters('languageCognitiveServicesName'))]",
-        "textAnalyticsForHealthServiceId": "[resourceId('Microsoft.CognitiveServices/accounts', parameters('textAnalyticsForHealthServiceName'))]",
+        "textAnalyticsForHealthServiceId": "[resourceId('Microsoft.CognitiveServices/accounts', parameters('textAnalyticsForHealthServiceName'))]"
     },
     "resources": [
         {
@@ -372,31 +372,31 @@
                         },
                         {
                             "name": "Authority",
-                            "value": "[concat('https://login.microsoftonline.com/',subscription().tenantId, 'oauth2/v2.0/token')]",
+                            "value": "[concat('https://login.microsoftonline.com/',subscription().tenantId, 'oauth2/v2.0/token')]"
                         },
                         {
                             "name": "Audience",
-                            "value": "[concat('https://', parameters('healthDataServicesWorkspace'), '-health-ai', '.fhir.azurehealthcareapis.com')]",
+                            "value": "[concat('https://', parameters('healthDataServicesWorkspace'), '-health-ai', '.fhir.azurehealthcareapis.com')]"
                         },
                         {
                             "name": "FhirServerUrl",
-                            "value": "[concat('https://', parameters('healthDataServicesWorkspace'), '-health-ai', '.fhir.azurehealthcareapis.com')]",
+                            "value": "[concat('https://', parameters('healthDataServicesWorkspace'), '-health-ai', '.fhir.azurehealthcareapis.com')]"
                         },
                         {
                             "name": "ClientId",
-                            "value": "parameters('clientId')",
+                            "value": "parameters('clientId')"
                         },
                         {
                             "name": "ClientSecret",
-                            "value": "parameters('clientSecret')",
+                            "value": "parameters('clientSecret')"
                         },
                          {
                             "name": "UUIDtoResourceTypeConversion",
-                            "value": "false",
+                            "value": "false"
                         },
                         {
                             "name": "MaxDegreeOfParallelism",
-                            "value": "16",
+                            "value": "16"
                         },
                         {
                             "name": "WEBSITE_MOUNT_ENABLED",
@@ -408,11 +408,11 @@
                         },
                         {
                             "name": "FUNCTIONS_EXTENSION_VERSION",
-                            "value": "~4",
+                            "value": "~4"
                         },
                         {
                             "name": "FUNCTIONS_WORKER_RUNTIME",
-                            "value": "dotnet",
+                            "value": "dotnet"
                         }
                     ]
                 },
