@@ -24,6 +24,12 @@ The Intelligent Dashboard is designed to help healthcare professionals and organ
 
 ## Setup Azure Resources
 
+### Steps at high level:
+
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https://raw.githubusercontent.com/iBoonz/azure-health-ai-samples/main/samples/intelligent-dashboard-ta4H/azuredeploy.json)
+<br>(Deploys required Azure Resources: Storage Account, Function App, Text Analytics for Health and Azure Health Data Services)<br>
+
+
 ## Setup and Configure the Power BI Report
 
 1. Download the Power BI pbix [here](/samples/intelligent-dashboard-ta4H/Power%20BI%20Dashboard/Clinical%20Insights%20FHIR.pbix). 
