@@ -398,7 +398,7 @@
                         },
                         {
                             "name": "Authority",
-                            "value": "[concat('https://login.microsoftonline.com/',subscription().tenantId, 'oauth2/v2.0/token')]"
+                            "value": "[concat('https://login.microsoftonline.com/',subscription().tenantId, '/oauth2/v2.0/token')]"
                         },
                         {
                             "name": "Audience",
