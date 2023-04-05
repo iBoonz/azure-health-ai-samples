@@ -1,0 +1,434 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "healthDataServicesWorkspace": {
+            "defaultValue": "",
+            "type": "String"
+        },
+        "textAnalyticsForHealthServiceName": {
+            "defaultValue": "",
+            "type": "String"
+        },
+        "storageAccountName": {
+            "defaultValue": "",
+            "type": "String"
+        },
+        "languageCognitiveServicesName": {
+            "defaultValue": "",
+            "type": "String"
+        },
+        "functionAppSku": {
+            "type": "string",
+            "defaultValue": "Consumption (Serverless)",
+            "allowedValues": [
+                "Consumption (Serverless)",
+                "Functions Premium"
+            ],
+            "metadata": {
+                "description": "Describes plan's pricing tier"
+            }
+        },
+        "functionName": {
+            "defaultValue": "[concat('ta4h-fhir-vis-', uniqueString(utcNow('F')))]",
+            "type": "String"
+        },
+        "textAnalyticsSku": {
+            "type": "string",
+            "defaultValue": "S",
+            "allowedValues": [
+                "S",
+                "F0"
+            ],
+            "metadata": {
+                "description": "Describes plan's pricing tier"
+            }
+        },
+        "languageCognitiveServicesNameSku": {
+            "type": "string",
+            "defaultValue": "S",
+            "allowedValues": [
+                "S",
+                "F0"
+            ],
+            "metadata": {
+                "description": "Describes plan's pricing tier"
+            }
+        },
+        "clientId": {
+            "defaultValue": "",
+            "type": "String",
+            "metadata": {
+                "description": "The Client Id that will connect to the FHIR server"
+            }
+        },
+        "clientSecret": {
+            "defaultValue": "",
+            "type": "String",
+            "metadata": {
+                "description": "The Client Secret that will connect to the FHIR server"
+            }
+        },
+        "repoUrl": {
+            "type": "string",
+            "defaultValue": "https://github.com/iBoonz/azure-health-ai-samples.git",
+            "metadata": {
+                "description": "The URL for the GitHub repository that contains the project to deploy."
+            }
+        },
+        "functionPackageUrl": {
+            "type": "string",
+            "defaultValue": "https://github.com/iBoonz/azure-health-ai-samples/samples/intelligent-dashboard-ta4H/text-analytics-for-health-support-functions/function.zip?raw=true",
+            "metadata": {
+                "description": "The URL for the GitHub repository that contains the project to deploy."
+            }
+        }
+    },
+    "variables": {
+        "hostingPlanNameLinux": "[concat('plan-linux-', parameters('functionName'))]",
+        "storageAccount": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
+        "languageCongntiveServiceId": "[resourceId('Microsoft.CognitiveServices/accounts', parameters('languageCognitiveServicesName'))]",
+        "textAnalyticsForHealthServiceId": "[resourceId('Microsoft.CognitiveServices/accounts', parameters('textAnalyticsForHealthServiceName'))]",
+    },
+    "resources": [
+        {
+            "type": "Microsoft.CognitiveServices/accounts",
+            "apiVersion": "2022-12-01",
+            "name": "[parameters('textAnalyticsForHealthServiceName')]",
+            "location": "eastus",
+            "sku": {
+                "name": "[parameters('textAnalyticsSku')]"
+            },
+            "kind": "TextAnalytics",
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "customSubDomainName": "[parameters('textAnalyticsForHealthServiceName')]",
+                "networkAcls": {
+                    "defaultAction": "Allow",
+                    "virtualNetworkRules": [],
+                    "ipRules": []
+                },
+                "publicNetworkAccess": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.CognitiveServices/accounts",
+            "apiVersion": "2022-12-01",
+            "name": "[parameters('languageCognitiveServicesName')]",
+            "location": "eastus",
+            "sku": {
+                "name": "[parameters('languageCognitiveServicesNameSku')]"
+            },
+            "kind": "CognitiveServices",
+            "identity": {
+                "type": "None"
+            },
+            "properties": {
+                "apiProperties": {},
+                "customSubDomainName": "[parameters('languageCognitiveServicesName')]",
+                "networkAcls": {
+                    "defaultAction": "Allow",
+                    "virtualNetworkRules": [],
+                    "ipRules": []
+                },
+                "publicNetworkAccess": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.HealthcareApis/workspaces",
+            "apiVersion": "2022-12-01",
+            "name": "[parameters('healthDataServicesWorkspace')]",
+            "location": "eastus",
+            "properties": {
+                "publicNetworkAccess": "Enabled",
+                "provisioningState": "Succeeded"
+            }
+        },
+        {
+            "type": "Microsoft.HealthcareApis/workspaces/fhirservices",
+            "apiVersion": "2022-12-01",
+            "name": "[concat(parameters('healthDataServicesWorkspace'), '/health-ai')]",
+            "location": "eastus",
+            "dependsOn": [
+                "[resourceId('Microsoft.HealthcareApis/workspaces', parameters('healthDataServicesWorkspace'))]"
+            ],
+            "kind": "fhir-R4",
+            "properties": {
+                "accessPolicies": [],
+                "acrConfiguration": {
+                    "loginServers": []
+                },
+                "authenticationConfiguration": {
+                    "authority": "[concat('https://login.microsoftonline.com/',subscription().tenantId)]",
+                    "audience": "[concat('https://', parameters('healthDataServicesWorkspace'), '-health-ai', '.fhir.azurehealthcareapis.com')]",
+                    "smartProxyEnabled": false
+                },
+                "corsConfiguration": {
+                    "origins": [],
+                    "headers": [],
+                    "methods": [],
+                    "allowCredentials": false
+                },
+                "exportConfiguration": {},
+                "importConfiguration": {
+                    "enabled": false,
+                    "initialImportMode": false
+                },
+                "resourceVersionPolicyConfiguration": {
+                    "default": "versioned",
+                    "resourceTypeOverrides": {}
+                },
+                "implementationGuidesConfiguration": {
+                    "usCoreMissingData": false
+                },
+                "eventState": "Disabled",
+                "publicNetworkAccess": "Enabled",
+                "provisioningState": "Succeeded"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2022-09-01",
+            "name": "[parameters('storageAccountName')]",
+            "location": "eastus",
+            "sku": {
+                "name": "Standard_LRS",
+                "tier": "Standard"
+            },
+            "kind": "StorageV2",
+            "properties": {
+                "dnsEndpointType": "Standard",
+                "defaultToOAuthAuthentication": false,
+                "publicNetworkAccess": "Enabled",
+                "allowCrossTenantReplication": true,
+                "minimumTlsVersion": "TLS1_2",
+                "allowBlobPublicAccess": true,
+                "allowSharedKeyAccess": true,
+                "networkAcls": {
+                    "bypass": "AzureServices",
+                    "virtualNetworkRules": [],
+                    "ipRules": [],
+                    "defaultAction": "Allow"
+                },
+                "supportsHttpsTrafficOnly": true,
+                "encryption": {
+                    "requireInfrastructureEncryption": false,
+                    "services": {
+                        "file": {
+                            "keyType": "Account",
+                            "enabled": true
+                        },
+                        "blob": {
+                            "keyType": "Account",
+                            "enabled": true
+                        }
+                    },
+                    "keySource": "Microsoft.Storage"
+                },
+                "accessTier": "Hot"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccountName'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+            ],
+            "sku": {
+                "name": "Standard_LRS",
+                "tier": "Standard"
+            },
+            "properties": {
+                "changeFeed": {
+                    "enabled": false
+                },
+                "restorePolicy": {
+                    "enabled": false
+                },
+                "containerDeleteRetentionPolicy": {
+                    "enabled": true,
+                    "days": 7
+                },
+                "cors": {
+                    "corsRules": []
+                },
+                "deleteRetentionPolicy": {
+                    "allowPermanentDelete": false,
+                    "enabled": true,
+                    "days": 7
+                },
+                "isVersioningEnabled": false
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccountName'), '/default/medical-texts-fhir')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccountName'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+            ],
+            "properties": {
+                "immutableStorageWithVersioning": {
+                    "enabled": false
+                },
+                "defaultEncryptionScope": "$account-encryption-key",
+                "denyEncryptionScopeOverride": false,
+                "publicAccess": "None"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccountName'), '/default/medical-texts-fhir-rejected')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccountName'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+            ],
+            "properties": {
+                "immutableStorageWithVersioning": {
+                    "enabled": false
+                },
+                "defaultEncryptionScope": "$account-encryption-key",
+                "denyEncryptionScopeOverride": false,
+                "publicAccess": "None"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccountName'), '/default/medical-texts-input')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccountName'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+            ],
+            "properties": {
+                "immutableStorageWithVersioning": {
+                    "enabled": false
+                },
+                "defaultEncryptionScope": "$account-encryption-key",
+                "denyEncryptionScopeOverride": false,
+                "publicAccess": "None"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2022-03-01",
+            "name": "[parameters('functionName')]",
+            "location": "East US",
+            "kind": "functionapp,linux",
+            "properties": {
+                "enabled": true,
+                "hostNameSslStates": [
+                    {
+                        "name": "[concat(parameters('functionName'), '.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Standard"
+                    },
+                    {
+                        "name": "[concat(parameters('functionName'), '.scm.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Repository"
+                    }
+                ],
+                "serverFarmId": "[variables('hostingPlanNameLinux')]",
+                "reserved": true,
+                "isXenon": false,
+                "hyperV": false,
+                "vnetRouteAllEnabled": false,
+                "vnetImagePullEnabled": false,
+                "vnetContentShareEnabled": false,
+                "siteConfig": {
+                    "numberOfWorkers": 1,
+                    "linuxFxVersion": "DOTNET|6.0",
+                    "acrUseManagedIdentityCreds": false,
+                    "alwaysOn": false,
+                    "http20Enabled": false,
+                    "functionAppScaleLimit": 200,
+                    "minimumElasticInstanceCount": 0,
+                    "appSettings": [
+                        {
+                            "name": "AzureWebJobsStorage",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountName'), ';AccountKey=', listKeys(variables('storageAccount'), '2019-04-01').keys[0].value,';EndpointSuffix=core.windows.net')]"
+                        },
+                        {
+                            "name": "AzureWebStorageForData",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountName'), ';AccountKey=', listKeys(variables('storageAccount'), '2019-04-01').keys[0].value,';EndpointSuffix=core.windows.net')]"
+                        },
+                        {
+                            "name": "AzureAI-Endpoint",
+                            "value": "[concat('https://', parameters('textAnalyticsForHealthServiceName'), '.cognitiveservices.azure.com/')]"
+                        },
+                        {
+                            "name": "AzureAI-Key",
+                            "value": "[listKeys(variables('textAnalyticsForHealthServiceId'),'2022-03-01').key1]"
+                        },
+                        {
+                            "name": "General-CognitiveServices-Key",
+                            "value": "[listKeys(variables('languageCongntiveServiceId'),'2022-03-01').key1]"
+                        },
+                        {
+                            "name": "Authority",
+                            "value": "[concat('https://login.microsoftonline.com/',subscription().tenantId, 'oauth2/v2.0/token')]",
+                        },
+                        {
+                            "name": "Audience",
+                            "value": "[concat('https://', parameters('healthDataServicesWorkspace'), '-health-ai', '.fhir.azurehealthcareapis.com')]",
+                        },
+                        {
+                            "name": "FhirServerUrl",
+                            "value": "[concat('https://', parameters('healthDataServicesWorkspace'), '-health-ai', '.fhir.azurehealthcareapis.com')]",
+                        },
+                        {
+                            "name": "ClientId",
+                            "value": "parameters('clientId')",
+                        },
+                        {
+                            "name": "ClientSecret",
+                            "value": "parameters('clientSecret')",
+                        },
+                         {
+                            "name": "UUIDtoResourceTypeConversion",
+                            "value": "false",
+                        },
+                        {
+                            "name": "MaxDegreeOfParallelism",
+                            "value": "16",
+                        },
+                        {
+                            "name": "WEBSITE_MOUNT_ENABLED",
+                            "value": "1"
+                        },
+                        {
+                            "name": "WEBSITE_RUN_FROM_PACKAGE",
+                            "value": "[parameters('functionPackageUrl')]"
+                        },
+                        {
+                            "name": "FUNCTIONS_EXTENSION_VERSION",
+                            "value": "~4",
+                        },
+                        {
+                            "name": "FUNCTIONS_WORKER_RUNTIME",
+                            "value": "dotnet",
+                        }
+                    ]
+                },
+                "scmSiteAlsoStopped": false,
+                "clientAffinityEnabled": false,
+                "clientCertEnabled": false,
+                "clientCertMode": "Required",
+                "hostNamesDisabled": false,
+                "customDomainVerificationId": "D9A01666CAF9E6F700747FCA8DF188E9693B165458A437590D100C1EC93A81AC",
+                "containerSize": 0,
+                "dailyMemoryTimeQuota": 0,
+                "httpsOnly": true,
+                "redundancyMode": "None",
+                "storageAccountRequired": false,
+                "keyVaultReferenceIdentity": "SystemAssigned"
+            }
+        }
+    ]
+}

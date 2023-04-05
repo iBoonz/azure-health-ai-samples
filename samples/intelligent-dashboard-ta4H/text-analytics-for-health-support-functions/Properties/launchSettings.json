@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "text_analytics_for_health_support_functions": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7037",
+      "launchBrowser": false
+    }
+  }
+}
