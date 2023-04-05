@@ -46,7 +46,7 @@
         },
         "languageCognitiveServicesNameSku": {
             "type": "string",
-            "defaultValue": "S",
+            "defaultValue": "Standard S0",
             "allowedValues": [
                 "Standard S0"
             ],
