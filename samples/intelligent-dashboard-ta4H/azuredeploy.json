@@ -20,10 +20,9 @@
         },
         "functionAppSku": {
             "type": "string",
-            "defaultValue": "Consumption (Serverless)",
+            "defaultValue": "Y1",
             "allowedValues": [
-                "Consumption (Serverless)",
-                "Functions Premium"
+                "Y1"
             ],
             "metadata": {
                 "description": "Describes plan's pricing tier"
@@ -183,9 +182,8 @@
                     "usCoreMissingData": false
                 },
                 "eventState": "Disabled",
-                "publicNetworkAccess": "Enabled",
-                "provisioningState": "Succeeded"
-            }
+                "publicNetworkAccess": "Enabled"
+        }
         },
         {
             "type": "Microsoft.Storage/storageAccounts",
