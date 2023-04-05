@@ -48,7 +48,7 @@
             "type": "string",
             "defaultValue": "S",
             "allowedValues": [
-                "Stanard S0"
+                "Standard S0"
             ],
             "metadata": {
                 "description": "The pricing tier for the cognitive services"
