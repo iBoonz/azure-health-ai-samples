@@ -41,18 +41,17 @@
                 "F0"
             ],
             "metadata": {
-                "description": "Describes plan's pricing tier"
+                "description": "The pricing tier for Text Analytics for Health"
             }
         },
         "languageCognitiveServicesNameSku": {
             "type": "string",
             "defaultValue": "S",
             "allowedValues": [
-                "S",
-                "F0"
+                "Stanard S0"
             ],
             "metadata": {
-                "description": "Describes plan's pricing tier"
+                "description": "The pricing tier for the cognitive services"
             }
         },
         "clientId": {
