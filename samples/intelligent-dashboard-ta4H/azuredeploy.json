@@ -46,9 +46,9 @@
         },
         "languageCognitiveServicesNameSku": {
             "type": "string",
-            "defaultValue": "Standard S0",
+            "defaultValue": "S0",
             "allowedValues": [
-                "Standard S0"
+                "S0"
             ],
             "metadata": {
                 "description": "The pricing tier for the cognitive services"
