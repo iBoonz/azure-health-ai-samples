@@ -26,7 +26,7 @@ The Intelligent Dashboard is designed to help healthcare professionals and organ
 
 ### Steps at high level:
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https://raw.githubusercontent.com/iBoonz/azure-health-ai-samples/main/samples/intelligent-dashboard-ta4H/azuredeploy.json)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FiBoonz%2Fazure-health-ai-samples%2Fmain%2Fsamples%2Fintelligent-dashboard-ta4H%2Fazuredeploy.json)
 <br>(Deploys required Azure Resources: Storage Account, Function App, Text Analytics for Health and Azure Health Data Services)<br>
 
 
