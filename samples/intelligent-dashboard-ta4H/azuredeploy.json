@@ -399,11 +399,11 @@
                         },
                         {
                             "name": "ClientId",
-                            "value": "parameters('clientId')"
+                            "value": "[parameters('clientId')]"
                         },
                         {
                             "name": "ClientSecret",
-                            "value": "parameters('clientSecret')"
+                            "value": "[parameters('clientSecret')]"
                         },
                          {
                             "name": "UUIDtoResourceTypeConversion",
