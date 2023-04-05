@@ -314,7 +314,7 @@
         {
             "type": "Microsoft.Insights/components",
             "apiVersion": "2020-02-02",
-            "name": "[concat(parameters('hostingPlanNameLinux'), '-insights')]",
+            "name": "[concat(variables('hostingPlanNameLinux'), '-insights')]",
             "location": "[resourceGroup().location]",
             "kind": "web",
             "properties": {
