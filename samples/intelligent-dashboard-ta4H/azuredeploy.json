@@ -374,15 +374,15 @@
                             "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountName'), ';AccountKey=', listKeys(variables('storageAccount'), '2019-04-01').keys[0].value,';EndpointSuffix=core.windows.net')]"
                         },
                         {
-                            "name": "AzureAI-Endpoint",
+                            "name": "AzureAI_Endpoint",
                             "value": "[concat('https://', parameters('textAnalyticsForHealthServiceName'), '.cognitiveservices.azure.com/')]"
                         },
                         {
-                            "name": "AzureAI-Key",
+                            "name": "AzureAI_Key",
                             "value": "[listKeys(variables('textAnalyticsForHealthServiceId'),'2022-03-01').key1]"
                         },
                         {
-                            "name": "General-CognitiveServices-Key",
+                            "name": "General_CognitiveServices_Key",
                             "value": "[listKeys(variables('languageCongntiveServiceId'),'2022-03-01').key1]"
                         },
                         {

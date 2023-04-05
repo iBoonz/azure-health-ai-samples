@@ -21,9 +21,9 @@ namespace text_analytics_for_health_support_functions
 {
     public class MedicalDocumentsToFhirFunction
     {
-        private static readonly string TextAnalyticsKey = Environment.GetEnvironmentVariable("AzureAI-Key");
-        private static readonly string TextAnalyticsEndPoint = Environment.GetEnvironmentVariable("AzureAI-Endpoint");
-        private static readonly string TranslatorSubscriptionKey = Environment.GetEnvironmentVariable("General-CognitiveServices-Key");
+        private static readonly string TextAnalyticsKey = Environment.GetEnvironmentVariable("AzureAI_Key");
+        private static readonly string TextAnalyticsEndPoint = Environment.GetEnvironmentVariable("AzureAI_Endpoint");
+        private static readonly string TranslatorSubscriptionKey = Environment.GetEnvironmentVariable("General_CognitiveServices_Key");
         private static readonly string TranslatorEndpoint = " https://api.cognitive.microsofttranslator.com";
 
         [FunctionName("MedicalDocumentsToFhirFunction")]
