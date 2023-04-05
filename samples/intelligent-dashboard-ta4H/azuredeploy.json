@@ -84,6 +84,7 @@
         }
     },
     "variables": {
+        "skuCode": "[parameters('functionAppSku')]",
         "hostingPlanNameLinux": "[concat('plan-linux-', parameters('functionName'))]",
         "storageAccount": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
         "languageCongntiveServiceId": "[resourceId('Microsoft.CognitiveServices/accounts', parameters('languageCognitiveServicesName'))]",
@@ -94,7 +95,7 @@
             "type": "Microsoft.CognitiveServices/accounts",
             "apiVersion": "2022-12-01",
             "name": "[parameters('textAnalyticsForHealthServiceName')]",
-            "location": "eastus",
+            "location": "[resourceGroup().location]",
             "sku": {
                 "name": "[parameters('textAnalyticsSku')]"
             },
@@ -116,7 +117,7 @@
             "type": "Microsoft.CognitiveServices/accounts",
             "apiVersion": "2022-12-01",
             "name": "[parameters('languageCognitiveServicesName')]",
-            "location": "eastus",
+            "location": "[resourceGroup().location]",
             "sku": {
                 "name": "[parameters('languageCognitiveServicesNameSku')]"
             },
@@ -139,7 +140,7 @@
             "type": "Microsoft.HealthcareApis/workspaces",
             "apiVersion": "2022-12-01",
             "name": "[parameters('healthDataServicesWorkspace')]",
-            "location": "eastus",
+            "location": "[resourceGroup().location]",
             "properties": {
                 "publicNetworkAccess": "Enabled"
             }
@@ -148,7 +149,7 @@
             "type": "Microsoft.HealthcareApis/workspaces/fhirservices",
             "apiVersion": "2022-12-01",
             "name": "[concat(parameters('healthDataServicesWorkspace'), '/health-ai')]",
-            "location": "eastus",
+            "location": "[resourceGroup().location]",
             "dependsOn": [
                 "[resourceId('Microsoft.HealthcareApis/workspaces', parameters('healthDataServicesWorkspace'))]"
             ],
@@ -190,7 +191,7 @@
             "type": "Microsoft.Storage/storageAccounts",
             "apiVersion": "2022-09-01",
             "name": "[parameters('storageAccountName')]",
-            "location": "eastus",
+            "location": "[resourceGroup().location]",
             "sku": {
                 "name": "Standard_LRS",
                 "tier": "Standard"
@@ -313,11 +314,29 @@
             }
         },
         {
+            "apiVersion": "2018-02-01",
+            "name": "[variables('hostingPlanNameLinux')]",
+            "type": "Microsoft.Web/serverfarms",
+            "location": "[resourceGroup().location]",
+            "kind": "linux",
+            "sku": {
+                "Name": "[variables('skuCode')]"
+            },
+            "properties": {
+                "name": "[variables('hostingPlanNameLinux')]",
+                "numberOfWorkers": "1",
+                "reserved": true
+            }
+        },
+        {
             "type": "Microsoft.Web/sites",
             "apiVersion": "2022-03-01",
             "name": "[parameters('functionName')]",
-            "location": "East US",
-            "kind": "functionapp,linux",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms/', variables('hostingPlanNameLinux'))]"
+            ],
+            "kind": "functionapp",
             "properties": {
                 "enabled": true,
                 "hostNameSslStates": [
