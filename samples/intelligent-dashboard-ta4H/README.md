@@ -25,6 +25,7 @@ The Intelligent Dashboard is designed to help healthcare professionals and organ
 ## Setup Azure Resources
 
 ### Creating an App Registration
+
 **Before Deploying to Azure:**
 1. Go to "Azure Active Directory"
 2. Click App registrations
@@ -32,9 +33,13 @@ The Intelligent Dashboard is designed to help healthcare professionals and organ
 4. Create new secret
 5. Copy ClientID and ClientSecret for the deployment step in Azure
 
+### Deploy the Azure Resources
+
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FiBoonz%2Fazure-health-ai-samples%2Fmain%2Fsamples%2Fintelligent-dashboard-ta4H%2Fazuredeploy.json)
 
-After deployment Add the "Fhir Contributor" Role for the newly created "App regestration" in "Azure Health Data Service FHIR Service" resource. More info can be found [here](https://learn.microsoft.com/en-us/azure/healthcare-apis/configure-azure-rbac)
+### Give the new App Registration access to theAzure Health Data FHIR Service
+
+After deployment Add the "Fhir Contributor" Role for the newly created "App regestration" in "Azure Health Data FHIR Service" resource. More info can be found [here](https://learn.microsoft.com/en-us/azure/healthcare-apis/configure-azure-rbac)
 
 ## Setup and Configure the Power BI Report
 
